@@ -17,6 +17,9 @@
 #include <linux/shmem_fs.h>
 #include <linux/mm_inline.h>
 #include <linux/ctype.h>
+#ifdef CONFIG_KSU_SUSFS_SUS_KSTAT
+#include <linux/susfs_def.h>
+#endif
 
 #include <asm/elf.h>
 #include <asm/uaccess.h>
@@ -346,6 +349,10 @@ static void show_vma_header_prefix(struct seq_file *m,
 		   pgoff,
 		   MAJOR(dev), MINOR(dev), ino);
 }
+
+#ifdef CONFIG_KSU_SUSFS_SUS_KSTAT
+extern void susfs_sus_ino_for_show_map_vma(unsigned long ino, dev_t *out_dev, unsigned long *out_ino);
+#endif
 
 static void
 show_map_vma(struct seq_file *m, struct vm_area_struct *vma, int is_pid)
