@@ -10,10 +10,18 @@
 #include <linux/nsproxy.h>
 #include <linux/security.h>
 #include <linux/fs_struct.h>
+#ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
+#include <linux/susfs_def.h>
+#endif
+
 #include "proc/internal.h" /* only for get_proc_task() in ->open() */
 
 #include "pnode.h"
 #include "internal.h"
+
+#ifdef CONFIG_KSU_SUSFS_SUS_MOUNT
+bool susfs_hide_sus_mnts_for_all_procs = true; // hide sus mounts for all processes by default
+#endif
 
 static unsigned mounts_poll(struct file *file, poll_table *wait)
 {
