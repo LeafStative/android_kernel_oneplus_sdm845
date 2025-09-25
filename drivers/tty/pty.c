@@ -618,10 +618,6 @@ static struct tty_struct *ptm_unix98_lookup(struct tty_driver *driver,
 	return ERR_PTR(-EIO);
 }
 
-#if defined(CONFIG_KSU) && defined(CONFIG_KSU_MANUAL_HOOK)
-extern int ksu_handle_devpts(struct inode*);
-#endif
-
 /**
  *	pts_unix98_lookup	-	find a pty slave
  *	@driver: pts driver
@@ -636,9 +632,6 @@ static struct tty_struct *pts_unix98_lookup(struct tty_driver *driver,
 {
 	struct tty_struct *tty;
 
-#if defined(CONFIG_KSU) && defined(CONFIG_KSU_MANUAL_HOOK)
-	ksu_handle_devpts((struct inode *)file->f_path.dentry->d_inode);
-#endif
 	mutex_lock(&devpts_mutex);
 	tty = devpts_get_priv(file->f_path.dentry);
 	mutex_unlock(&devpts_mutex);
