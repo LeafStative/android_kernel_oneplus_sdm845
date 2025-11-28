@@ -63,11 +63,14 @@ static int seq_show(struct seq_file *m, void *v)
 	if (likely(susfs_is_current_proc_umounted()) &&
 				mnt->mnt_id >= DEFAULT_KSU_MNT_ID)
 	{
+		// - We have to iterate the mnt->mnt_parent until the mnt_id is not sus,
+		//   doing real_mount(path.mnt)->mnt_id is wrong since this will retrieve
+		//   the mnt_id of the umounted path.
 		for (; mnt->mnt_id >= DEFAULT_KSU_MNT_ID; mnt = mnt->mnt_parent) { }
 	}
 	seq_printf(m, "pos:\t%lli\nflags:\t0%o\nmnt_id:\t%i\n",
-		   (long long)file->f_pos, f_flags,
-		   mnt->mnt_id);
+			(long long)file->f_pos, f_flags,
+			mnt->mnt_id);
 #else
 	seq_printf(m, "pos:\t%lli\nflags:\t0%o\nmnt_id:\t%i\n",
 		   (long long)file->f_pos, f_flags,
