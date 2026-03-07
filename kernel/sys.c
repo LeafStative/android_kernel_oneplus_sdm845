@@ -594,9 +594,7 @@ SYSCALL_DEFINE3(setresuid, uid_t, ruid, uid_t, euid, uid_t, suid)
 	kuid_t kruid, keuid, ksuid;
 
 #ifdef CONFIG_KSU_SUSFS
-	if (ksu_handle_setresuid(ruid, euid, suid)) {
-		pr_info("Something wrong with ksu_handle_setresuid()\n");
-	}
+	(void)ksu_handle_setresuid(ruid, euid, suid);
 #endif
 
 	kruid = make_kuid(ns, ruid);
