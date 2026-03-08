@@ -175,3 +175,11 @@ else
 selinux-y += selinuxfs.o
 selinux-y += hooks.o
 endif
+
+ifeq ($(CONFIG_BBG),y)
+
+ifneq ($(shell grep -q '#define DEFINE_LSM(lsm)' $(srctree)/include/linux/lsm_hooks.h && echo y),)
+ccflags-y += -DBBG_USE_DEFINE_LSM
+endif
+
+endif
