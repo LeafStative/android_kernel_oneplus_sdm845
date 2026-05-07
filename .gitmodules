@@ -1,7 +1,7 @@
 [submodule "KernelSU"]
 	path = KernelSU
-	url = https://github.com/SukiSU-Ultra/SukiSU-Ultra
-	branch = susfs-main
+	url = https://github.com/ReSukiSU/ReSukiSU
+	branch = main
 [submodule "Baseband-guard"]
 	path = Baseband-guard
 	url = https://github.com/vc-teahouse/Baseband-guard
