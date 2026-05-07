@@ -47,7 +47,7 @@
 #ifdef CONFIG_KSU_SUSFS
 extern u32 susfs_ksu_sid;
 extern u32 susfs_priv_app_sid;
-bool susfs_is_avc_log_spoofing_enabled = false;
+extern struct static_key_false susfs_is_avc_log_spoofing_enabled;
 #endif
 
 struct avc_entry {
@@ -165,12 +165,14 @@ static void avc_dump_query(struct audit_buffer *ab, u32 ssid, u32 tsid, u16 tcla
 
 	rc = security_sid_to_context(tsid, &scontext, &scontext_len);
 #ifdef CONFIG_KSU_SUSFS
-	if (unlikely(tsid == susfs_ksu_sid && READ_ONCE(susfs_is_avc_log_spoofing_enabled))) {
-		if (rc)
-			audit_log_format(ab, " tsid=%d", susfs_priv_app_sid);
-		else
-			audit_log_format(ab, " tcontext=%s", "u:r:priv_app:s0:c512,c768");
-		goto bypass_orig_flow;
+	if (static_branch_likely(&susfs_is_avc_log_spoofing_enabled)) {
+		if (unlikely(tsid == susfs_ksu_sid)) {
+			if (rc)
+				audit_log_format(ab, " tsid=%d", susfs_priv_app_sid);
+			else
+				audit_log_format(ab, " tcontext=%s", "u:r:priv_app:s0:c512,c768");
+			goto bypass_orig_flow;
+		}
 	}
 #endif
 	if (rc)
